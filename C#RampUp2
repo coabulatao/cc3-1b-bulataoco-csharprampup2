@@ -102,7 +102,12 @@ namespace MyApplication
     Console.WriteLine ("================================================");
     
     // Characters names
-    string name1 = "Rimuru", name2 = "Zoro", name3 = "Julius", name4 = "Tryndamere", name5 = "Enel", name6 = "Luna";
+    string name1 = "Rimuru",
+           name2 = "Zoro",
+           name3 = "Julius",
+           name4 = "Tryndamere",
+           name5 = "Enel",
+           name6 = "Luna";
     
     // Abilities names
     string ability1 = "Eagle's eye",
