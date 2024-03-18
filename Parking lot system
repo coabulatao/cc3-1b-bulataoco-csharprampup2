@@ -1,0 +1,134 @@
+using System;
+using System.Collections.Generic;
+
+public class ParkingLot
+{
+    private List<Level> _levels;
+
+    public ParkingLot(int numLevels, int spotsPerLevel)
+    {
+        _levels = new List<Level>();
+        for (int i = 0; i < numLevels; i++)
+        {
+            _levels.Add(new Level(spotsPerLevel));
+        }
+    }
+
+    public bool ParkVehicle(IVehicle vehicle)
+    {
+        foreach (var level in _levels)
+        {
+            if (level.ParkVehicle(vehicle))
+            {
+                return true;
+            }
+        }
+        return false; // No available spots
+    }
+
+    public bool RemoveVehicle(IVehicle vehicle)
+    {
+        foreach (var level in _levels)
+        {
+            if (level.RemoveVehicle(vehicle))
+            {
+                return true;
+            }
+        }
+        return false; // Vehicle not found
+    }
+}
+
+public class Level
+{
+    private List<Spot> _spots;
+
+    public Level(int numSpots)
+    {
+        _spots = new List<Spot>();
+        for (int i = 0; i < numSpots; i++)
+        {
+            _spots.Add(new Spot());
+        }
+    }
+
+    public bool ParkVehicle(IVehicle vehicle)
+    {
+        foreach (var spot in _spots)
+        {
+            if (spot.Park(vehicle))
+            {
+                return true;
+            }
+        }
+        return false; // No available spots
+    }
+
+    public bool RemoveVehicle(IVehicle vehicle)
+    {
+        foreach (var spot in _spots)
+        {
+            if (spot.Remove(vehicle))
+            {
+                return true;
+            }
+        }
+        return false; // Vehicle not found
+    }
+}
+
+public class Spot
+{
+    public bool IsAvailable { get; private set; }
+
+    public Spot()
+    {
+        IsAvailable = true;
+    }
+
+    public bool Park(IVehicle vehicle)
+    {
+        if (IsAvailable)
+        {
+            IsAvailable = false;
+            // Logic to associate vehicle with this spot
+            return true;
+        }
+        return false; // Spot already taken
+    }
+
+    public bool Remove(IVehicle vehicle)
+    {
+        if (!IsAvailable)
+        {
+            IsAvailable = true;
+            // Logic to remove vehicle from this spot
+            return true;
+        }
+        return false; // Spot is already empty
+    }
+}
+
+public interface IVehicle
+{
+    string Make { get; }
+    string Model { get; }
+}
+
+public class Car : IVehicle
+{
+    public string Make { get; set; }
+    public string Model { get; set; }
+}
+
+public class Truck : IVehicle
+{
+    public string Make { get; set; }
+    public string Model { get; set; }
+}
+
+public class Motorcycle : IVehicle
+{
+    public string Make { get; set; }
+    public string Model { get; set; }
+}
