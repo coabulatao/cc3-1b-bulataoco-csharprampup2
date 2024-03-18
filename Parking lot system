@@ -1,134 +1,62 @@
-using System;
-using System.Collections.Generic;
-
-public class ParkingLot
+public enum VehicleSize
 {
-    private List<Level> _levels;
+    Motorcycle,
+    Compact,
+    Large
+}
 
-    public ParkingLot(int numLevels, int spotsPerLevel)
-    {
-        _levels = new List<Level>();
-        for (int i = 0; i < numLevels; i++)
-        {
-            _levels.Add(new Level(spotsPerLevel));
-        }
-    }
+public abstract class Vehicle
+{
+    public string LicensePlate { get; set; }
+    public VehicleSize Size { get; set; }
+}
 
-    public bool ParkVehicle(IVehicle vehicle)
+public class Car : Vehicle
+{
+    public Car(string licensePlate)
     {
-        foreach (var level in _levels)
-        {
-            if (level.ParkVehicle(vehicle))
-            {
-                return true;
-            }
-        }
-        return false; // No available spots
-    }
-
-    public bool RemoveVehicle(IVehicle vehicle)
-    {
-        foreach (var level in _levels)
-        {
-            if (level.RemoveVehicle(vehicle))
-            {
-                return true;
-            }
-        }
-        return false; // Vehicle not found
+        LicensePlate = licensePlate;
+        Size = VehicleSize.Compact;
     }
 }
 
-public class Level
+public class Truck : Vehicle
 {
-    private List<Spot> _spots;
-
-    public Level(int numSpots)
+    public Truck(string licensePlate)
     {
-        _spots = new List<Spot>();
-        for (int i = 0; i < numSpots; i++)
-        {
-            _spots.Add(new Spot());
-        }
+        LicensePlate = licensePlate;
+        Size = VehicleSize.Large;
     }
+}
 
-    public bool ParkVehicle(IVehicle vehicle)
+public class Motorcycle : Vehicle
+{
+    public Motorcycle(string licensePlate)
     {
-        foreach (var spot in _spots)
-        {
-            if (spot.Park(vehicle))
-            {
-                return true;
-            }
-        }
-        return false; // No available spots
-    }
-
-    public bool RemoveVehicle(IVehicle vehicle)
-    {
-        foreach (var spot in _spots)
-        {
-            if (spot.Remove(vehicle))
-            {
-                return true;
-            }
-        }
-        return false; // Vehicle not found
+        LicensePlate = licensePlate;
+        Size = VehicleSize.Motorcycle;
     }
 }
 
 public class Spot
 {
-    public bool IsAvailable { get; private set; }
-
-    public Spot()
-    {
-        IsAvailable = true;
-    }
-
-    public bool Park(IVehicle vehicle)
-    {
-        if (IsAvailable)
-        {
-            IsAvailable = false;
-            // Logic to associate vehicle with this spot
-            return true;
-        }
-        return false; // Spot already taken
-    }
-
-    public bool Remove(IVehicle vehicle)
-    {
-        if (!IsAvailable)
-        {
-            IsAvailable = true;
-            // Logic to remove vehicle from this spot
-            return true;
-        }
-        return false; // Spot is already empty
-    }
+    public int Level { get; set; }
+    public int Row { get; set; }
+    public int Number { get; set; }
+    public bool IsAvailable { get; set; }
+    public VehicleSize Size { get; set; }
+    // Other spot-related properties and methods
 }
 
-public interface IVehicle
+public class Level
 {
-    string Make { get; }
-    string Model { get; }
+    public int LevelNumber { get; set; }
+    public List<Spot> Spots { get; set; }
+    // Other level-related properties and methods
 }
 
-public class Car : IVehicle
+public class ParkingLot
 {
-    public string Make { get; set; }
-    public string Model { get; set; }
-}
-
-public class Truck : IVehicle
-{
-    public string Make { get; set; }
-    public string Model { get; set; }
-}
-
-public class Motorcycle : IVehicle
-{
-    public string Make { get; set; }
-    public string Model { get; set; }
+    public List<Level> Levels { get; set; }
+    // Methods for parking, removing, and tracking available spots
 }
